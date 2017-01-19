@@ -1,5 +1,24 @@
-<ul>
-  <% for(var i = 0; i < entries.length; i++) { %>
-    <li><%= entries[i].gratefulOn %> - <%= entries[i].text %></li>
-  <% } %>
-</ul>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <h1>Gratitude Journal</h1>
+
+    <ul class="list-group">
+      <%
+        Object.keys(entries).forEach(function(date) {
+          var collection = entries[date];
+      %>
+
+        <li class="list-group-item list-group-item-info">
+          <strong><%= date %></strong>
+        </li>
+
+        <% collection.forEach(function(entry) { %>
+          <li class="list-group-item">
+            <%= entry.text %>
+          </li>
+        <% }); %>
+
+      <% }); %>
+    </ul>
+  </div>
+</div>

@@ -3,6 +3,7 @@ if (process.env.NODE_ENV === "development")
 
 var express = require("express"),
     firebase = require("firebase"),
+    _ = require("lodash"),
     router = express.Router();
 
 var config = {
@@ -25,7 +26,7 @@ router.get("/gratitudes", function(req, res) {
   var entries = [];
 
   database.ref('gratitudes')
-    .orderByChild("gratefulOn")
+    .orderByChild("gratefulOn DESC")
     .once('value')
     .then(function(snapshot) {
       if (snapshot.val() !== null) {
@@ -37,7 +38,9 @@ router.get("/gratitudes", function(req, res) {
         });
       }
 
-      res.render('pages/entries', { entries: entries });
+      entries.reverse();
+      var entriesByDate = _.groupBy(entries, function(e) { return e.gratefulOn });
+      res.render('pages/entries', { entries: entriesByDate });
     });
 });
 
