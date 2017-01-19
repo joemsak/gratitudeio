@@ -14,8 +14,6 @@ router.post("/sms", function(req, res) {
       authToken = process.env.TWILIO_AUTH_TOKEN,
       client = new twilio.RestClient(accountSid, authToken);
 
-  console.log(req);
-
   client.messages.create({
     body: req.body.Body,
     to: '+15179445230',  // Text this number
@@ -24,6 +22,8 @@ router.post("/sms", function(req, res) {
     if (err)
       console.log(err);
   });
+
+  res.end();
 });
 
 module.exports = router;
