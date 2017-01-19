@@ -2,7 +2,7 @@ if (process.env.NODE_ENV === "development")
   require('dotenv').config();
 
 var express = require("express"),
-    twilio = require("twilio"),
+    firebase = require("firebase"),
     router = express.Router();
 
 router.get("/", function(req, res) {
@@ -10,17 +10,23 @@ router.get("/", function(req, res) {
 });
 
 router.post("/sms", function(req, res) {
-  var accountSid = process.env.TWILIO_SID,
-      authToken = process.env.TWILIO_AUTH_TOKEN,
-      client = new twilio.RestClient(accountSid, authToken);
+  if (req.body.From !== "+15179445230")
+    res.end();
 
-  client.messages.create({
-    body: req.body.Body,
-    to: '+15179445230',  // Text this number
-    from: '+15175805672' // From a valid Twilio number
-  }, function(err, message) {
-    if (err)
-      console.log(err);
+  var config = {
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.FIREBASE_DB_URL,
+    storageBucket: process.env.FIREBASE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MSG_SENDER_ID,
+  };
+  firebase.initializeApp(config);
+
+  var database = firebase.database(),
+      id = database.ref().child('gratitudes').push().key;
+
+  database.ref("/gratitudes/" + id).set({
+    text: req.body.Body,
   });
 
   res.end();
