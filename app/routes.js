@@ -21,10 +21,34 @@ router.get("/", function(req, res) {
   res.status(404).send("404 - Resource not found.")
 });
 
+router.get("/entries", function(req, res) {
+  var entries = [];
+
+  database.ref('cristies')
+    .orderByChild("textedAt")
+    .once('value')
+    .then(function(snapshot) {
+      if (snapshot.val() !== null) {
+        snapshot.forEach(function(entry) {
+          entries.push({ text: entry.val().text });
+        });
+      }
+
+      res.render('pages/entries', { entries: entries });
+    });
+});
+
 router.post("/sms", function(req, res) {
-  if (req.body.From !== "+15179445230") {
+  if (req.body.From === "+525510495599") {
+    var id = database.ref().child('cristies').push().key;
+
+    database.ref("/cristies/" + id).set({
+      text: req.body.Body,
+      textedAt: firebase.database.ServerValue.TIMESTAMP,
+    });
+
     res.end();
-  } else {
+  } else if (req.body.From === "+15179445230") {
     var id = database.ref().child('gratitudes').push().key;
 
     database.ref("/gratitudes/" + id).set({
@@ -32,6 +56,8 @@ router.post("/sms", function(req, res) {
       gratefulOn: firebase.database.ServerValue.TIMESTAMP,
     });
 
+    res.end();
+  } else {
     res.end();
   }
 });
