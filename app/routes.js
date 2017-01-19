@@ -17,7 +17,7 @@ router.post("/sms", function(req, res) {
   console.log(req);
 
   client.messages.create({
-    body: req.body.message,
+    body: req.body.Body,
     to: '+15179445230',  // Text this number
     from: '+15175805672' // From a valid Twilio number
   }, function(err, message) {
