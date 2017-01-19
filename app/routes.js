@@ -6,7 +6,7 @@ var express = require("express"),
     router = express.Router();
 
 router.get("/", function(req, res) {
-  res.render('pages/index');
+  res.status(404).send("404 - Resource not found.")
 });
 
 router.post("/sms", function(req, res) {
@@ -14,15 +14,19 @@ router.post("/sms", function(req, res) {
       authToken = process.env.TWILIO_AUTH_TOKEN,
       client = new twilio.RestClient(accountSid, authToken);
 
+  console.log(req);
+
   client.messages.create({
-    body: req.body,
+    body: req.body.message,
     to: '+15179445230',  // Text this number
     from: '+15175805672' // From a valid Twilio number
   }, function(err, message) {
-    res.status(500).send(message.sid).end();
+    if (err) {
+      res.status(500).json({ error: err });
+    } else {
+      res.sendStatus(200);
+    }
   });
-
-  res.status(200).end();
 });
 
 module.exports = router;
