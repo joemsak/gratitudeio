@@ -1,10 +1,10 @@
 var express = require("express"),
     expressLayouts = require("express-ejs-layouts"),
     bodyParser = require("body-parser"),
-    app = express(),
-    router = require("./app/routes");
+    router = require("./app/routes"),
+    app = express();
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 3000));
 
 app.use(express.static(__dirname + "/public"));
 

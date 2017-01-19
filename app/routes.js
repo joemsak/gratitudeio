@@ -1,22 +1,27 @@
+require('dotenv').config();
+
 var express = require("express"),
-    path = require("path"),
+    twilio = require("twilio"),
     router = express.Router();
 
 router.get("/", function(req, res) {
   res.render('pages/index');
 });
 
-router.get("/about", function(req, res) {
-  res.render('pages/about');
-});
+router.post("/sms", function(req, res) {
+  var accountSid = process.env.TWILIO_SID,
+      authToken = process.env.TWILIO_AUTH_TOKEN,
+      client = new twilio.RestClient(accountSid, authToken);
 
-router.get("/contact", function(req, res) {
-  res.render('pages/contact');
-});
+  client.messages.create({
+    body: 'Hello from Node',
+    to: '+15179445230',  // Text this number
+    from: '+15175805672' // From a valid Twilio number
+  }, function(err, message) {
+    res.status(500).send(message.sid).end();
+  });
 
-router.post("/contact", function(req, res) {
-  res.send("Thanks for contacting us, " + req.body.name + "!");
-  console.log(req.body.message);
+  res.status(200).end();
 });
 
 module.exports = router;
