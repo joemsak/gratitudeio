@@ -22,16 +22,18 @@ router.get("/", function(req, res) {
 });
 
 router.post("/sms", function(req, res) {
-  if (req.body.From !== "+15179445230")
+  if (req.body.From !== "+15179445230") {
     res.end();
+  } else {
+    var id = database.ref().child('gratitudes').push().key;
 
-  var id = database.ref().child('gratitudes').push().key;
-  database.ref("/gratitudes/" + id).set({
-    text: req.body.Body,
-    gratefulOn: firebase.database.ServerValue.TIMESTAMP,
-  });
+    database.ref("/gratitudes/" + id).set({
+      text: req.body.Body,
+      gratefulOn: firebase.database.ServerValue.TIMESTAMP,
+    });
 
-  res.end();
+    res.end();
+  }
 });
 
 module.exports = router;
