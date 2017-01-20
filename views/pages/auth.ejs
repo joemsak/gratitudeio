@@ -25,7 +25,28 @@
 
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Send code</button>
-      <span class="spinner">Sending...</span>
     </div>
+
+    <p class="spinner">Sending...</p>
+  </form>
+
+  <form id="code-form" class="form-inline" method="post" action="/auth/code">
+    <input
+      type="hidden"
+      name="phone_number"
+    />
+
+    <div class="form-group mx-sm-3">
+      <input
+        type="text"
+        name="code"
+        class="form-control"
+        placeholder="Enter the code here"
+        required
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <p class="spinner">Authorizing...</p>
   </form>
 </div>

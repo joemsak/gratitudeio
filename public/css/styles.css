@@ -15,14 +15,41 @@ body > div {
   margin: 0 0 1rem;
 }
 
-#auth-form .spinner {
+#auth-form .spinner,
+#code-form .spinner {
   display: none;
 }
 
-#auth-form.loading button {
+#auth-form.loading button,
+#code-form.loading button {
   display: none;
 }
 
-#auth-form.loading .spinner {
+#auth-form.loading .spinner,
+#code-form.loading .spinner,
+#code-form.xhr-success .spinner,
+#code-form.xhr-failed .spinner {
   display: block;
+}
+
+#auth-form.disabled .form-group,
+#code-form.xhr-success .form-group,
+#code-form.xhr-success button {
+  display: none;
+}
+
+#code-form {
+  display: none;
+}
+
+#code-form.reveal {
+  display: block;
+}
+
+#code-form.xhr-success .spinner {
+  color: green;
+}
+
+#code-form.xhr-failed .spinner {
+  color: red;
 }

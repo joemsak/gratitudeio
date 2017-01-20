@@ -3,6 +3,7 @@ if (process.env.NODE_ENV === "development")
 
 var express = require("express"),
     Entry = require("./models/entry"),
+    Auth = require("./models/Auth"),
     router = express.Router();
 
 router.use("/entries", function (req, res, next) {
@@ -33,28 +34,18 @@ router.post("/sms", function(req, res) {
 });
 
 router.post('/auth', function(req, res) {
-  var crypto = require('crypto'), 
-      secret = process.env.CRYPTO_SECRET,
-      hash = crypto.createHmac('sha256', secret)
-                    .update(Date.now().toString())
-                    .digest('hex');
-
-  var code = hash.slice(0,7);
-
-  var accountSid = process.env.TWILIO_SID,
-      authToken = process.env.TWILIO_AUTH_TOKEN,
-      client = require('twilio')(accountSid, authToken);
-
-  client.messages.create({ 
-      to: "+1" + req.body.phoneNumber,
-      from: "+15175805672",
-      body: "This is your auth code: " + code,
-  }, function(err, message) { 
+  Auth.sendCode(req, function(err) {
     if (err) {
       res.status(500).json(err);
     } else {
       res.status(200).json({});
     }
+  });
+});
+
+router.post('/auth/code', function(req, res) {
+  Auth.verifyCode(req, function(statusCode, data) {
+    res.status(statusCode).json(data);
   });
 });
 
