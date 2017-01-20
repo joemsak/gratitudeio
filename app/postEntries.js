@@ -1,4 +1,5 @@
-var database = require("./database");
+var firebase = require("firebase"),
+    database = require("./database");
 
 var postEntries = function(req, callback) {
   if (req.body.From === "+15179445230") {
