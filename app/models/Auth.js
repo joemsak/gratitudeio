@@ -33,24 +33,34 @@ function Auth() {
   }
 
   this.verifyCode = function(req, callback) {
-    var authToken = null;
+    var codes = [];
 
     database.ref('auth_codes')
+      .orderByChild("createdAt")
       .once('value')
       .then(function(snapshot) {
         if (snapshot.val() !== null) {
           snapshot.forEach(function(code) {
-            if (req.body.code === code.val().code &&
-                  req.body.phoneNumber === code.val().phoneNumber &&
-                    (Date.now() - (2 * 60)) > code.val().createdAt)
-              authToken = code.val().authToken;
+            codes.push({
+              code: code.val().code,
+              phoneNumber: code.val().phoneNumber,
+              authToken: code.val().authToken,
+              createdAt: code.val().createdAt,
+            });
           });
         }
 
-        if (authToken !== null) {
-          callback(200, { authToken: authToken });
+        var oneMinuteAgo = Date.now() - 60 * 1000;
+        var matchedCode = codes.reverse().find(function(c) {
+          return req.body.code === c.code &&
+                   req.body.phoneNumber === c.phoneNumber &&
+                     c.createdAt > oneMinuteAgo;
+        });
+
+        if (matchedCode) {
+          callback(200, { authToken: matchedCode.authToken });
         } else {
-          callback(403, { error: "Invalid code", authToken: "" });
+          callback(403, { error: "Invalid code" });
         }
       });
   }
