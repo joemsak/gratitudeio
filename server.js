@@ -7,6 +7,8 @@ var express = require("express"),
 app.set('port', (process.env.PORT || 3000));
 
 app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/node_modules/flag-icon-css"));
+
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(expressLayouts);

@@ -1,0 +1,31 @@
+<div class="auth-page col-md-6 col-md-offset-3">
+  <h1>Sign in</h1>
+
+  <p>We will authorize you by sending a code to your phone</p>
+
+  <form id="auth-form" method="post" action="/auth">
+    <div class="form-group">
+      <label for="phone_number">Enter your phone number</label><br />
+
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="flag-icon flag-icon-us"></span>
+          +1
+        </div>
+
+        <input
+          type="tel"
+          class="form-control"
+          name="phone_number"
+          placeholder="(555) 512-1265"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Send code</button>
+      <span class="spinner">Sending...</span>
+    </div>
+  </form>
+</div>
